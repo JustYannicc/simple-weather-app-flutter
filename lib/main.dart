@@ -100,22 +100,31 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       this.position = position.toString();
     });
-
-    
-    fetchcurrentweather();
   }
 
-  String getweatherURL = 'http://api.weatherapi.com/v1';
+  formatlocation(pos) {
+    final String input = pos.toString();
 
-  Future<void> fetchcurrentweather() async {
+    final latitude = double.parse(input.split(':')[1].split(',')[0].trim());
+    final longitude = double.parse(input.split(':')[2].trim());
+
+    final formatedlocation = '$latitude,$longitude';
+    return formatedlocation;
+  }
+
+  Future<void> fetchcurrentweather(formatedlocation) async {
     var apiKey = 'fad8109ce3ec4083978154521212708';
-    var headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $apiKey',
-    };
+    var getweatherURL =
+        'http://api.weatherapi.com/v1/current.json?key=$apiKey&q=$formatedlocation&aqi=yes';
     var url = Uri.parse(getweatherURL);
-    var response = await http.get(url, headers: headers);
+    var response = await http.get(url);
     debugPrint(response.body);
+  }
+
+  Future<void> manageweather() async {
+    await _getLocation();
+    var formatedlocation = await formatlocation(position);
+    await fetchcurrentweather(formatedlocation);
   }
 
   @override
@@ -163,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _getLocation,
+        onPressed: manageweather,
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
