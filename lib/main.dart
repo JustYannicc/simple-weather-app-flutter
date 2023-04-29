@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -22,9 +24,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.pink,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Basic Weather App'),
     );
   }
 }
@@ -59,6 +61,61 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  String position = '';
+
+  Future<void> _getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Request the user to enable location services
+      serviceEnabled = await Geolocator.openLocationSettings();
+      if (!serviceEnabled) {
+        // Location services are still not enabled, return
+        return;
+      }
+    }
+
+    // Check the user's location permissions
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      // The user has previously denied location permissions permanently, return
+      return;
+    } else if (permission == LocationPermission.denied) {
+      // Request location permissions from the user
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // The user denied location permissions, return
+        return;
+      }
+    }
+
+    // Get the user's current location
+    Position position = await Geolocator.getCurrentPosition();
+    debugPrint(position.toString());
+    setState(() {
+      this.position = position.toString();
+    });
+
+    
+    fetchcurrentweather();
+  }
+
+  String getweatherURL = 'http://api.weatherapi.com/v1';
+
+  Future<void> fetchcurrentweather() async {
+    var apiKey = 'fad8109ce3ec4083978154521212708';
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+    var url = Uri.parse(getweatherURL);
+    var response = await http.get(url, headers: headers);
+    debugPrint(response.body);
   }
 
   @override
@@ -96,18 +153,17 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Your Location:',
             ),
             Text(
-              '$_counter',
+              '$position',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _getLocation,
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
