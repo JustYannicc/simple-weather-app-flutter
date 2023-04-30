@@ -106,8 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   String formatedlocation = '';
-  double longitude = 0;
-  double latitude = 0;
+  double latitude = 47.3769;
+  double longitude = 8.5417;
 
   formatlocation(pos) {
     final String input = pos.toString();
@@ -185,26 +185,32 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: Stack(
         children: [
           Container(
-            child: MapboxMap(
-              accessToken: 'pk.eyJ1IjoianVzdHlhbm5pY2MiLCJhIjoiY2xoMjhmY2xiMWIweTNxcnptemcxYWVsOCJ9.nNpMduoTVhCHkvecc0ffCw',
-              onMapCreated: (controller) {
-                // Add any initialization code here
-              },
-              cameraTargetBounds: CameraTargetBounds.unbounded,
-              styleString: 'mapbox://styles/justyannicc/clh28i7gb00kx01qybd5l5mwx',
-              initialCameraPosition: CameraPosition(
-                target: LatLng(latitude, longitude),
-                zoom: 14.0,
-              ),
-            ),
+            child: Stack(
+              children: [
+
+                MapboxMap(
+                  accessToken: 'pk.eyJ1IjoianVzdHlhbm5pY2MiLCJhIjoiY2xoMjhmY2xiMWIweTNxcnptemcxYWVsOCJ9.nNpMduoTVhCHkvecc0ffCw',
+                  onMapCreated: (controller) {
+                    // Add any initialization code here
+                  },
+                  cameraTargetBounds: CameraTargetBounds.unbounded,
+                  styleString: 'mapbox://styles/justyannicc/clh28i7gb00kx01qybd5l5mwx',
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(latitude, longitude),
+                    zoom: 11.0,
+                  ),
+                  scrollGesturesEnabled: false,
+                  attributionButtonPosition: AttributionButtonPosition.BottomRight,
+                ),
+
+                Container(
+                  color: Colors.black.withOpacity(0.1), // set the background color to black with 50% opacity
+                ),
+              ],
+            )
           ),
 
           Positioned.fill(
