@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -27,104 +26,23 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.pink,
+        primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Basic Weather App'),
+      home: LoadingScreen(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  final Position position;
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  const MyHomePage({Key? key, required this.position}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  String position = '';
-
-  Future<void> _getLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Check if location services are enabled
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Request the user to enable location services
-      serviceEnabled = await Geolocator.openLocationSettings();
-      if (!serviceEnabled) {
-        // Location services are still not enabled, return
-        return;
-      }
-    }
-
-    // Check the user's location permissions
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.deniedForever) {
-      // The user has previously denied location permissions permanently, return
-      return;
-    } else if (permission == LocationPermission.denied) {
-      // Request location permissions from the user
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // The user denied location permissions, return
-        return;
-      }
-    }
-
-    // Get the user's current location
-    Position position = await Geolocator.getCurrentPosition();
-    //debugPrint(position.toString());
-    setState(() {
-      this.position = position.toString();
-    });
-  }
-
-  String formatedlocation = '';
-  double latitude = 47.3769;
-  double longitude = 8.5417;
-
-  formatlocation(pos) {
-    final String input = pos.toString();
-
-    final latitude = double.parse(input.split(':')[1].split(',')[0].trim());
-    final longitude = double.parse(input.split(':')[2].trim());
-
-    final formatedlocation = '$latitude,$longitude';
-    setState(() {
-      this.formatedlocation = formatedlocation;
-      this.longitude = longitude;
-      this.latitude = latitude;
-    });
-    return formatedlocation;
-  }
-
-
   String currenttemp = '';
   String currentcondition = '';
   String currentwind = '';
@@ -142,8 +60,10 @@ class _MyHomePageState extends State<MyHomePage> {
   String currentlocation = '';
   String currentairquality = '';
 
-  Future<void> fetchcurrentweather(formatedlocation) async {
+  Future<void> fetchcurrentweather(position) async {
     var apiKey = 'fad8109ce3ec4083978154521212708';
+    var formatedlocation =
+        position.latitude.toString() + ',' + position.longitude.toString();
     var getweatherURL =
         'http://api.weatherapi.com/v1/current.json?key=$apiKey&q=$formatedlocation&aqi=yes';
     var url = Uri.parse(getweatherURL);
@@ -166,14 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
       this.currentwindgust = data['current']['gust_kph'].toString();
       this.currenticon = data['current']['condition']['icon'].toString();
       this.currentlocation = data['location']['name'].toString();
-      this.currentairquality = data['current']['air_quality']['us-epa-index'].toString(); //us-epa-index
+      this.currentairquality = data['current']['air_quality']['us-epa-index']
+          .toString(); //us-epa-index
     });
-  }
-
-  Future<void> manageweather() async {
-    await _getLocation();
-    var formatedlocation = await formatlocation(position);
-    await fetchcurrentweather(formatedlocation);
   }
 
   @override
@@ -188,31 +103,32 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: [
           Container(
-            child: Stack(
-              children: [
-
-                MapboxMap(
-                  accessToken: 'pk.eyJ1IjoianVzdHlhbm5pY2MiLCJhIjoiY2xoMjhmY2xiMWIweTNxcnptemcxYWVsOCJ9.nNpMduoTVhCHkvecc0ffCw',
-                  onMapCreated: (controller) {
-                    // Add any initialization code here
-                  },
-                  cameraTargetBounds: CameraTargetBounds.unbounded,
-                  styleString: 'mapbox://styles/justyannicc/clh28i7gb00kx01qybd5l5mwx',
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(latitude, longitude),
-                    zoom: 11.0,
-                  ),
-                  scrollGesturesEnabled: false,
-                  attributionButtonPosition: AttributionButtonPosition.BottomRight,
+              child: Stack(
+            children: [
+              MapboxMap(
+                accessToken:
+                    'pk.eyJ1IjoianVzdHlhbm5pY2MiLCJhIjoiY2xoMjhmY2xiMWIweTNxcnptemcxYWVsOCJ9.nNpMduoTVhCHkvecc0ffCw',
+                onMapCreated: (controller) {
+                  // Add any initialization code here
+                },
+                cameraTargetBounds: CameraTargetBounds.unbounded,
+                styleString:
+                    'mapbox://styles/justyannicc/clh28i7gb00kx01qybd5l5mwx',
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                      widget.position.latitude, widget.position.longitude),
+                  zoom: 11.0,
                 ),
-
-                Container(
-                  color: Colors.black.withOpacity(0.1), // set the background color to black with 50% opacity
-                ),
-              ],
-            )
-          ),
-
+                scrollGesturesEnabled: false,
+                attributionButtonPosition:
+                    AttributionButtonPosition.BottomRight,
+              ),
+              Container(
+                color: Colors.black.withOpacity(
+                    0.1), // set the background color to black with 50% opacity
+              ),
+            ],
+          )),
           Positioned.fill(
             child: Center(
               // Center is a layout widget. It takes a single child and positions it
@@ -247,10 +163,76 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: manageweather,
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class LoadingScreen extends StatefulWidget {
+  @override
+  _LoadingScreenState createState() => _LoadingScreenState();
+}
+
+class _LoadingScreenState extends State<LoadingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getLocation().then((position) {
+      // Use the position object here
+      setState(() {
+        position = position;
+      });
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  MyHomePage(position: position)));
+    }).catchError((error) {
+      // Handle the error here
+    });
+  }
+
+  Future<Position> getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Request the user to enable location services
+      serviceEnabled = await Geolocator.openLocationSettings();
+      if (!serviceEnabled) {
+        // Location services are still not enabled, return
+        return Future.error('Location services are disabled.');
+      }
+    }
+
+    // Check the user's location permissions
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      // The user has previously denied location permissions permanently, return
+      return Future.error('Location permissions are denied permanently.');
+    } else if (permission == LocationPermission.denied) {
+      // Request location permissions from the user
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // The user denied location permissions, return
+        return Future.error('Location permissions are denied.');
+      }
+    }
+
+    // Get the user's current location
+    Position position = await Geolocator.getCurrentPosition();
+    return position;
+    //debugPrint(position.toString());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }
