@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'dart:ui';
 
 void main() {
   runApp(const MyApp());
@@ -33,6 +34,45 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class WeatherData {
+  String temp;
+  String condition;
+  String wind;
+  String humidity;
+  String feelslike;
+  String uv;
+  String visibility;
+  String pressure;
+  String cloud;
+  String precipitation;
+  String winddir;
+  String winddegree;
+  String windgust;
+  String icon;
+  String location;
+  String airquality;
+
+  WeatherData({
+    required this.temp,
+    required this.condition,
+    required this.wind,
+    required this.humidity,
+    required this.feelslike,
+    required this.uv,
+    required this.visibility,
+    required this.pressure,
+    required this.cloud,
+    required this.precipitation,
+    required this.winddir,
+    required this.winddegree,
+    required this.windgust,
+    required this.icon,
+    required this.location,
+    required this.airquality,
+  });
+}
+
+
 class MyHomePage extends StatefulWidget {
   final Position position;
 
@@ -43,23 +83,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String currenttemp = '';
-  String currentcondition = '';
-  String currentwind = '';
-  String currenthumidity = '';
-  String currentfeelslike = '';
-  String currentuv = '';
-  String currentvisibility = '';
-  String currentpressure = '';
-  String currentcloud = '';
-  String currentprecipitation = '';
-  String currentwinddir = '';
-  String currentwinddegree = '';
-  String currentwindgust = '';
-  String currenticon = '';
-  String currentlocation = '';
-  String currentairquality = '';
 
+   @override
+  void initState() {
+    super.initState();
+    fetchcurrentweather(widget.position);
+  }
+
+
+ late WeatherData? weatherData;
+  
   Future<void> fetchcurrentweather(position) async {
     var apiKey = 'fad8109ce3ec4083978154521212708';
     var formatedlocation =
@@ -71,34 +104,35 @@ class _MyHomePageState extends State<MyHomePage> {
     Map<String, dynamic> data = jsonDecode(response.body);
 
     setState(() {
-      this.currenttemp = data['current']['temp_c'].toString();
-      this.currentcondition = data['current']['condition']['text'].toString();
-      this.currentwind = data['current']['wind_kph'].toString();
-      this.currenthumidity = data['current']['humidity'].toString();
-      this.currentfeelslike = data['current']['feelslike_c'].toString();
-      this.currentuv = data['current']['uv'].toString();
-      this.currentvisibility = data['current']['vis_km'].toString();
-      this.currentpressure = data['current']['pressure_mb'].toString();
-      this.currentcloud = data['current']['cloud'].toString();
-      this.currentprecipitation = data['current']['precip_mm'].toString();
-      this.currentwinddir = data['current']['wind_dir'].toString();
-      this.currentwinddegree = data['current']['wind_degree'].toString();
-      this.currentwindgust = data['current']['gust_kph'].toString();
-      this.currenticon = data['current']['condition']['icon'].toString();
-      this.currentlocation = data['location']['name'].toString();
-      this.currentairquality = data['current']['air_quality']['us-epa-index']
-          .toString(); //us-epa-index
+      WeatherData weatherData = WeatherData(
+        temp: data['current']['temp_c'].toString(),
+        condition: data['current']['condition']['text'].toString(),
+        wind: data['current']['wind_kph'].toString(),
+        humidity: data['current']['humidity'].toString(),
+        feelslike: data['current']['feelslike_c'].toString(),
+        uv: data['current']['uv'].toString(),
+        visibility: data['current']['vis_km'].toString(),
+        pressure: data['current']['pressure_mb'].toString(),
+        cloud: data['current']['cloud'].toString(),
+        precipitation: data['current']['precip_mm'].toString(),
+        winddir: data['current']['wind_dir'].toString(),
+        winddegree: data['current']['wind_degree'].toString(),
+        windgust: data['current']['gust_kph'].toString(),
+        icon: data['current']['condition']['icon'].toString(),
+        location: data['location']['name'].toString(),
+        airquality: data['current']['air_quality']['us-epa-index']
+            .toString(),
+      );
+
+      // Set the state with the weatherData object
+      this.weatherData = weatherData;
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
     return Scaffold(
       body: Stack(
         children: [
@@ -122,47 +156,294 @@ class _MyHomePageState extends State<MyHomePage> {
                 scrollGesturesEnabled: false,
                 attributionButtonPosition:
                     AttributionButtonPosition.BottomRight,
-              ),
-              Container(
-                color: Colors.black.withOpacity(
-                    0.1), // set the background color to black with 50% opacity
-              ),
-            ],
-          )),
-          Positioned.fill(
-            child: Center(
-              // Center is a layout widget. It takes a single child and positions it
-              // in the middle of the parent.
-              child: Column(
-                // Column is also a layout widget. It takes a list of children and
-                // arranges them vertically. By default, it sizes itself to fit its
-                // children horizontally, and tries to be as tall as its parent.
-                //
-                // Invoke "debug painting" (press "p" in the console, choose the
-                // "Toggle Debug Paint" action from the Flutter Inspector in Android
-                // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-                // to see the wireframe for each widget.
-                //
-                // Column has various properties to control how it sizes itself and
-                // how it positions its children. Here we use mainAxisAlignment to
-                // center the children vertically; the main axis here is the vertical
-                // axis because Columns are vertical (the cross axis would be
-                // horizontal).
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text(
-                    'Current Temperature:',
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.1), // set the background color to black with 50% opacity
                   ),
-                  Text(
-                    '$currenttemp',
-                    style: Theme.of(context).textTheme.headlineMedium,
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        color: Colors.transparent,
+                      ),
+                      BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
+                        child: Container(
+                          color: Colors.black.withOpacity(0.1),
+                        ),
+                      ),
+                      // your original child widget goes here
+                    ],
+                  )
+                ),
+              ],
+            ),
+          ),
+
+
+          Container(
+            margin: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 50),
+                Row(
+                  children: [
+                    Image.network(
+                      'https:${weatherData?.icon}',
+                      height: 50,
+                      width: 50,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      '${weatherData?.temp} °C',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Text(
+                  '${weatherData?.condition}',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Wind',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '${weatherData?.wind} kph',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Humidity',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '${weatherData?.humidity}%',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Feels Like',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '${weatherData?.feelslike} °C',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'UV Index',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '${weatherData?.uv}',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Visibility',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '${weatherData?.visibility} km',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Pressure',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '${weatherData?.pressure} mb',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Cloud Cover',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              '${weatherData?.cloud}%',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Precipitation',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              '${weatherData?.precipitation} mm',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Wind Direction',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              '${weatherData?.winddir}',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Wind Degree',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              '${weatherData?.winddir}°',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Wind Gust',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              '${weatherData?.windgust} kph',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Location',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              '${weatherData?.location}',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Air Quality Index',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              '${weatherData?.airquality}',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
     );
   }
 }
