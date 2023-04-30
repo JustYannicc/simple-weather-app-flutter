@@ -151,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 initialCameraPosition: CameraPosition(
                   target: LatLng(
                       widget.position.latitude, widget.position.longitude),
-                  zoom: 11.0,
+                  zoom: 12.0,
                 ),
                 scrollGesturesEnabled: false,
                 attributionButtonPosition:
@@ -166,13 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Container(
                         color: Colors.transparent,
                       ),
-                      BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
-                        child: Container(
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                      ),
-                      // your original child widget goes here
+
                     ],
                   )
                 ),
