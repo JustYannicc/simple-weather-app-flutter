@@ -119,6 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   attributionButtonPosition:
                       AttributionButtonPosition.BottomRight,
                 ),
+                
                 Container(
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(
@@ -130,13 +131,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: Colors.transparent,
                         ),
                       ],
-                    )),
+                    )
+                  ),
               ],
             ),
           ),
           Container(
             width: 400,
-            height: 600,
+            height: 800,
             margin: EdgeInsets.all(50),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.4),
@@ -149,26 +151,50 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 50),
-                      Row(
-                        children: [
-                          Image.network(
+                      
+                    Column(
+                      children: [
+                        SizedBox(height: 20),
+                        Text(
+                          '${weatherData?.location}',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          padding: EdgeInsets.all(20.0),
+                          alignment: Alignment.center,
+                          child: Image.network(
                             'https:${weatherData?.icon}',
-                            height: 50,
-                            width: 50,
+                            height: 100,
+                            width: 100,
                           ),
-                          SizedBox(width: 10),
-                          Text(
-                            '${weatherData?.temp} °C',
-                            style: TextStyle(fontSize: 24),
+                        ),
+                        SizedBox(height: 20),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${weatherData?.temp}',
+                                style: TextStyle(fontSize: 60),
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                '°C',
+                                style: TextStyle(fontSize: 36),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        '${weatherData?.condition}',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          '${weatherData?.condition}',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                      ],
+                    ),
+
+
                       SizedBox(height: 20),
                       Row(
                         children: [
@@ -363,27 +389,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               ],
                             ),
                           ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Location',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  '${weatherData?.location}',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        children: [
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
