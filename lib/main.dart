@@ -74,56 +74,24 @@ class WeatherData {
 
 class MyHomePage extends StatefulWidget {
   final Position position;
+  final WeatherData? weatherData;
 
-  const MyHomePage({Key? key, required this.position}) : super(key: key);
+  const MyHomePage({Key? key, required this.position, this.weatherData})
+      : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  WeatherData? weatherData;
+
   @override
   void initState() {
     super.initState();
-    fetchcurrentweather(widget.position);
+    weatherData = widget.weatherData;
   }
 
-  late WeatherData? weatherData;
-
-  Future<void> fetchcurrentweather(position) async {
-    var apiKey = 'fad8109ce3ec4083978154521212708';
-    var formatedlocation =
-        position.latitude.toString() + ',' + position.longitude.toString();
-    var getweatherURL =
-        'http://api.weatherapi.com/v1/current.json?key=$apiKey&q=$formatedlocation&aqi=yes';
-    var url = Uri.parse(getweatherURL);
-    var response = await http.get(url);
-    Map<String, dynamic> data = jsonDecode(response.body);
-
-    setState(() {
-      WeatherData weatherData = WeatherData(
-        temp: data['current']['temp_c'].toString(),
-        condition: data['current']['condition']['text'].toString(),
-        wind: data['current']['wind_kph'].toString(),
-        humidity: data['current']['humidity'].toString(),
-        feelslike: data['current']['feelslike_c'].toString(),
-        uv: data['current']['uv'].toString(),
-        visibility: data['current']['vis_km'].toString(),
-        pressure: data['current']['pressure_mb'].toString(),
-        cloud: data['current']['cloud'].toString(),
-        precipitation: data['current']['precip_mm'].toString(),
-        winddir: data['current']['wind_dir'].toString(),
-        winddegree: data['current']['wind_degree'].toString(),
-        windgust: data['current']['gust_kph'].toString(),
-        icon: data['current']['condition']['icon'].toString(),
-        location: data['location']['name'].toString(),
-        airquality: data['current']['air_quality']['us-epa-index'].toString(),
-      );
-
-      // Set the state with the weatherData object
-      this.weatherData = weatherData;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -452,23 +420,63 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+
+  WeatherData? weatherData;
+
   @override
   void initState() {
     super.initState();
-    getLocation().then((position) {
+    getLocation().then((position) async {
       // Use the position object here
+      WeatherData weatherData = await fetchcurrentweather(position);
       setState(() {
-        position = position;
+        this.weatherData = weatherData;
       });
 
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (BuildContext context) =>
-                  MyHomePage(position: position)));
+                  MyHomePage(position: position, weatherData: weatherData)));
     }).catchError((error) {
       // Handle the error here
     });
+  }
+
+  Future<WeatherData> fetchcurrentweather(position) async {
+    var apiKey = 'fad8109ce3ec4083978154521212708';
+    var formatedlocation =
+        position.latitude.toString() + ',' + position.longitude.toString();
+    var getweatherURL =
+        'http://api.weatherapi.com/v1/current.json?key=$apiKey&q=$formatedlocation&aqi=yes';
+    var url = Uri.parse(getweatherURL);
+    var response = await http.get(url);
+    Map<String, dynamic> data = jsonDecode(response.body);
+
+    var weatherData = WeatherData(
+      temp: data['current']['temp_c'].toString(),
+      condition: data['current']['condition']['text'].toString(),
+      wind: data['current']['wind_kph'].toString(),
+      humidity: data['current']['humidity'].toString(),
+      feelslike: data['current']['feelslike_c'].toString(),
+      uv: data['current']['uv'].toString(),
+      visibility: data['current']['vis_km'].toString(),
+      pressure: data['current']['pressure_mb'].toString(),
+      cloud: data['current']['cloud'].toString(),
+      precipitation: data['current']['precip_mm'].toString(),
+      winddir: data['current']['wind_dir'].toString(),
+      winddegree: data['current']['wind_degree'].toString(),
+      windgust: data['current']['gust_kph'].toString(),
+      icon: data['current']['condition']['icon'].toString(),
+      location: data['location']['name'].toString(),
+      airquality: data['current']['air_quality']['us-epa-index'].toString(),
+    );
+
+    setState(() {
+      this.weatherData = weatherData;
+    });
+
+    return weatherData;
   }
 
   Future<Position> getLocation() async {
