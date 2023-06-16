@@ -36,22 +36,22 @@ class MyApp extends StatelessWidget {
 }
 
 Map<int, String> conditionToIconMap = {
-1000: 'clear-day', // Sunny
-1003: 'partly-cloudy-day', // Partly cloudy
-1006: 'cloudy', // Cloudy
-1009: 'overcast', // Overcast
-1030: 'mist', // Mist
-1063: 'drizzle', // Patchy rain possible
-1066: 'snow', // Patchy snow possible
-1069: 'sleet', // Patchy sleet possible
-1072: 'drizzle', // Patchy freezing drizzle possible
-1087: 'thunderstorms', // Thundery outbreaks possible
-1114: 'snow', // Blowing snow
-1117: 'snow', // Blizzard
-1135: 'fog', // Fog
-1147: 'fog', // Freezing fog
-1150: 'drizzle', // Patchy light drizzle
-1153: 'drizzle', // Light drizzle
+  1000: 'clear-day', // Sunny
+  1003: 'partly-cloudy-day', // Partly cloudy
+  1006: 'cloudy', // Cloudy
+  1009: 'overcast', // Overcast
+  1030: 'mist', // Mist
+  1063: 'drizzle', // Patchy rain possible
+  1066: 'snow', // Patchy snow possible
+  1069: 'sleet', // Patchy sleet possible
+  1072: 'drizzle', // Patchy freezing drizzle possible
+  1087: 'thunderstorms', // Thundery outbreaks possible
+  1114: 'snow', // Blowing snow
+  1117: 'snow', // Blizzard
+  1135: 'fog', // Fog
+  1147: 'fog', // Freezing fog
+  1150: 'drizzle', // Patchy light drizzle
+  1153: 'drizzle', // Light drizzle
 // ... add remaining mappings
 };
 
@@ -69,7 +69,7 @@ class WeatherData {
   String winddir;
   String winddegree;
   String windgust;
-  String icon;
+  int icon;
   String location;
   String airquality;
 
@@ -113,7 +113,6 @@ class _MyHomePageState extends State<MyHomePage> {
     weatherData = widget.weatherData;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,7 +139,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   attributionButtonPosition:
                       AttributionButtonPosition.BottomRight,
                 ),
-                
                 Container(
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(
@@ -152,8 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: Colors.transparent,
                         ),
                       ],
-                    )
-                  ),
+                    )),
               ],
             ),
           ),
@@ -172,57 +169,63 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      
-                    Column(
-                      children: [
-                        SizedBox(height: 20),
-                        Text(
-                          '${weatherData?.location}',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        SizedBox(height: 20),
-                        Container(
-                          padding: EdgeInsets.all(20.0),
-                          alignment: Alignment.center,
-                          child: weatherData?.icon != null 
-                            ? SvgPicture.asset(
-                                'assets/meteocons/${conditionToIconMap[weatherData?.icon]}.svg',
-                                height: 100,
-                                width: 100,
-                              ) 
-                            : Container(
-                                height: 100,
-                                width: 100,
-                                color: Colors.grey,
-                                child: Center(child: Text("No icon available")),
-                              ),
-                        ),
-                        SizedBox(height: 20),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '${weatherData?.temp}',
-                                style: TextStyle(fontSize: 60),
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                '°C',
-                                style: TextStyle(fontSize: 36),
-                              ),
-                            ],
+                      Column(
+                        children: [
+                          SizedBox(height: 20),
+                          Text(
+                            '${weatherData?.location}',
+                            style: TextStyle(fontSize: 18),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          '${weatherData?.condition}',
-                          style: TextStyle(fontSize: 24),
-                        ),
-                      ],
-                    ),
-
-
+                          SizedBox(height: 20),
+                          Container(
+                            padding: EdgeInsets.all(20.0),
+                            alignment: Alignment.center,
+                            child: () {
+                              var iconCode = weatherData?.icon;
+                              var mappedIcon = conditionToIconMap[iconCode];
+                              debugPrint(
+                                  "iconCode: $iconCode, mappedIcon: $mappedIcon");
+                              if (mappedIcon != null) {
+                                return SvgPicture.asset(
+                                  'assets/meteocons/$mappedIcon.svg',
+                                  height: 100,
+                                  width: 100,
+                                );
+                              } else {
+                                return Container(
+                                  height: 100,
+                                  width: 100,
+                                  color: Colors.grey,
+                                  child:
+                                      Center(child: Text("No icon available")),
+                                );
+                              }
+                            }(),
+                          ),
+                          SizedBox(height: 20),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${weatherData?.temp}',
+                                  style: TextStyle(fontSize: 60),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  '°C',
+                                  style: TextStyle(fontSize: 36),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            '${weatherData?.condition}',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        ],
+                      ),
                       SizedBox(height: 20),
                       Row(
                         children: [
@@ -453,7 +456,6 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-
   WeatherData? weatherData;
 
   @override
@@ -475,7 +477,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
       // Handle the error here
     });
   }
-
 
   Future<WeatherData> fetchcurrentweather(position) async {
     var apiKey = 'fad8109ce3ec4083978154521212708';
@@ -501,7 +502,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       winddir: data['current']['wind_dir'].toString(),
       winddegree: data['current']['wind_degree'].toString(),
       windgust: data['current']['gust_kph'].toString(),
-      icon: data['current']['condition']['code'].toString(),
+      icon: data['current']['condition']['code'],
       location: data['location']['name'].toString(),
       airquality: data['current']['air_quality']['us-epa-index'].toString(),
     );
