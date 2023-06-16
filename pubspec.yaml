@@ -38,6 +38,7 @@ dependencies:
   geolocator: ^9.0.2
   http: ^0.13.5
   mapbox_gl: ^0.16.0
+  flutter_svg: ^0.22.0
   
   
 

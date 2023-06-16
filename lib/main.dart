@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'dart:ui';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,6 +34,26 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+Map<int, String> conditionToIconMap = {
+1000: 'clear-day', // Sunny
+1003: 'partly-cloudy-day', // Partly cloudy
+1006: 'cloudy', // Cloudy
+1009: 'overcast', // Overcast
+1030: 'mist', // Mist
+1063: 'drizzle', // Patchy rain possible
+1066: 'snow', // Patchy snow possible
+1069: 'sleet', // Patchy sleet possible
+1072: 'drizzle', // Patchy freezing drizzle possible
+1087: 'thunderstorms', // Thundery outbreaks possible
+1114: 'snow', // Blowing snow
+1117: 'snow', // Blizzard
+1135: 'fog', // Fog
+1147: 'fog', // Freezing fog
+1150: 'drizzle', // Patchy light drizzle
+1153: 'drizzle', // Light drizzle
+// ... add remaining mappings
+};
 
 class WeatherData {
   String temp;
@@ -163,11 +184,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         Container(
                           padding: EdgeInsets.all(20.0),
                           alignment: Alignment.center,
-                          child: Image.network(
-                            'https:${weatherData?.icon}',
-                            height: 100,
-                            width: 100,
-                          ),
+                          child: weatherData?.icon != null 
+                            ? SvgPicture.asset(
+                                'assets/meteocons/${conditionToIconMap[weatherData?.icon]}.svg',
+                                height: 100,
+                                width: 100,
+                              ) 
+                            : Container(
+                                height: 100,
+                                width: 100,
+                                color: Colors.grey,
+                                child: Center(child: Text("No icon available")),
+                              ),
                         ),
                         SizedBox(height: 20),
                         Center(
@@ -448,6 +476,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     });
   }
 
+
   Future<WeatherData> fetchcurrentweather(position) async {
     var apiKey = 'fad8109ce3ec4083978154521212708';
     var formatedlocation =
@@ -472,7 +501,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       winddir: data['current']['wind_dir'].toString(),
       winddegree: data['current']['wind_degree'].toString(),
       windgust: data['current']['gust_kph'].toString(),
-      icon: data['current']['condition']['icon'].toString(),
+      icon: data['current']['condition']['code'].toString(),
       location: data['location']['name'].toString(),
       airquality: data['current']['air_quality']['us-epa-index'].toString(),
     );
