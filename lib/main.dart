@@ -182,10 +182,23 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                     children: [
                       Column(
                         children: [
-                          SizedBox(height: 20),
-                          Text(
-                            '${weatherData?.location}',
-                            style: TextStyle(fontSize: 18),
+                          SizedBox(height: 10),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/icons/geo-alt-fill.svg',
+                                  width: 18,
+                                  height: 18,
+                                ),
+                                SizedBox(width: 3), // Add some spacing between the icon and text
+                                Text(
+                                  '${weatherData?.location}',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ],
+                            ),
                           ),
                           Container(
                             alignment: Alignment.center,
@@ -200,13 +213,13 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                                     turns: _controller!,
                                     child: SvgPicture.asset(
                                       'assets/meteocons/$mappedIcon.svg',
-                                      height: 200,
+                                      height: 180,
                                       width: 200,
                                     ),
                                   );
                                 } else {
                                   return Container(
-                                    height: 200,
+                                    height: 180,
                                     width: 200,
                                     color: Colors.grey,
                                     child:
@@ -504,7 +517,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     Map<String, dynamic> data = jsonDecode(response.body);
 
     var weatherData = WeatherData(
-      temp: data['current']['temp_c'].toString(),
+      temp: data['current']['temp_c'].round().toString(),
       condition: data['current']['condition']['text'].toString(),
       wind: data['current']['wind_kph'].toString(),
       humidity: data['current']['humidity'].toString(),
