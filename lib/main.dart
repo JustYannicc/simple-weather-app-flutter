@@ -230,23 +230,32 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                             ),
                           ),
                           
-                          SizedBox(height: 20),
                           Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${weatherData?.temp}',
-                                  style: TextStyle(fontSize: 60),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  '°C',
-                                  style: TextStyle(fontSize: 36),
-                                ),
-                              ],
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                clipBehavior: Clip.none, // This makes it okay for the Stack to be larger than its bounds.
+                                children: [
+                                  Text(
+                                    '${weatherData?.temp}',
+                                    style: TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Positioned(
+                                    top: 15,
+                                    right: -40.0,  // adjust this value to move '°C' text left or right
+                                    child: Text(
+                                      '°C',
+                                      style: TextStyle(fontSize: 36),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
+
+
                           SizedBox(height: 20),
                           Text(
                             '${weatherData?.condition}',
