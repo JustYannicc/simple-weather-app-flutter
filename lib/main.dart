@@ -104,13 +104,24 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   WeatherData? weatherData;
+  AnimationController? _controller;
 
   @override
   void initState() {
     super.initState();
     weatherData = widget.weatherData;
+    _controller = AnimationController(
+      duration: const Duration(seconds: 30), // Increase the time here to slow down the animation
+      vsync: this,
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
   }
 
   @override
@@ -176,32 +187,36 @@ class _MyHomePageState extends State<MyHomePage> {
                             '${weatherData?.location}',
                             style: TextStyle(fontSize: 18),
                           ),
-                          SizedBox(height: 20),
                           Container(
-                            padding: EdgeInsets.all(20.0),
                             alignment: Alignment.center,
-                            child: () {
-                              var iconCode = weatherData?.icon;
-                              var mappedIcon = conditionToIconMap[iconCode];
-                              debugPrint(
-                                  "iconCode: $iconCode, mappedIcon: $mappedIcon");
-                              if (mappedIcon != null) {
-                                return SvgPicture.asset(
-                                  'assets/meteocons/$mappedIcon.svg',
-                                  height: 100,
-                                  width: 100,
-                                );
-                              } else {
-                                return Container(
-                                  height: 100,
-                                  width: 100,
-                                  color: Colors.grey,
-                                  child:
-                                      Center(child: Text("No icon available")),
-                                );
-                              }
-                            }(),
+                            child: Builder(
+                              builder: (BuildContext context) {
+                                var iconCode = weatherData?.icon;
+                                var mappedIcon = conditionToIconMap[iconCode];
+                                debugPrint(
+                                    "iconCode: $iconCode, mappedIcon: $mappedIcon");
+                                if (mappedIcon != null) {
+                                  return RotationTransition(
+                                    turns: _controller!,
+                                    child: SvgPicture.asset(
+                                      'assets/meteocons/$mappedIcon.svg',
+                                      height: 200,
+                                      width: 200,
+                                    ),
+                                  );
+                                } else {
+                                  return Container(
+                                    height: 200,
+                                    width: 200,
+                                    color: Colors.grey,
+                                    child:
+                                        Center(child: Text("No icon available")),
+                                  );
+                                }
+                              },
+                            ),
                           ),
+                          
                           SizedBox(height: 20),
                           Center(
                             child: Row(
