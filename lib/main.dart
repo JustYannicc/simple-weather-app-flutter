@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: LoadingScreen(),
+      home: const LoadingScreen(),
     );
   }
 }
@@ -168,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           Container(
             width: 400,
             height: 800,
-            margin: EdgeInsets.all(50),
+            margin: const EdgeInsets.all(50),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.4),
             ),
@@ -182,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                     children: [
                       Column(
                         children: [
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -192,10 +192,10 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                                   width: 18,
                                   height: 18,
                                 ),
-                                SizedBox(width: 3), // Add some spacing between the icon and text
+                                const SizedBox(width: 3), // Add some spacing between the icon and text
                                 Text(
                                   '${weatherData?.location}',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
@@ -223,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                                     width: 200,
                                     color: Colors.grey,
                                     child:
-                                        Center(child: Text("No icon available")),
+                                        const Center(child: Text("No icon available")),
                                   );
                                 }
                               },
@@ -232,17 +232,17 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                           
                           Center(
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
                               child: Stack(
                                 alignment: Alignment.center,
                                 clipBehavior: Clip.none, // This makes it okay for the Stack to be larger than its bounds.
                                 children: [
                                   Text(
                                     '${weatherData?.temp}',
-                                    style: TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center,
                                   ),
-                                  Positioned(
+                                  const Positioned(
                                     top: 15,
                                     right: -40.0,  // adjust this value to move '°C' text left or right
                                     child: Text(
@@ -256,28 +256,28 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                           ),
 
 
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Text(
                             '${weatherData?.condition}',
-                            style: TextStyle(fontSize: 24),
+                            style: const TextStyle(fontSize: 24),
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Wind',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.wind} kph',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
@@ -286,14 +286,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Humidity',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.humidity}%',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
@@ -302,35 +302,35 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Feels Like',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.feelslike} °C',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'UV Index',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.uv}',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
@@ -339,14 +339,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Visibility',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.visibility} km',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
@@ -355,35 +355,35 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Pressure',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.pressure} mb',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Cloud Cover',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.cloud}%',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
@@ -392,14 +392,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Precipitation',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.precipitation} mm',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
@@ -408,35 +408,35 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Wind Direction',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.winddir}',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Wind Degree',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.winddir}°',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
@@ -445,14 +445,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Wind Gust',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.windgust} kph',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
@@ -461,14 +461,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   'Air Quality Index',
                                   style: TextStyle(fontSize: 18),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
                                   '${weatherData?.airquality}',
-                                  style: TextStyle(fontSize: 18),
+                                  style: const TextStyle(fontSize: 18),
                                 ),
                               ],
                             ),
@@ -488,6 +488,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 }
 
 class LoadingScreen extends StatefulWidget {
+  const LoadingScreen({super.key});
+
   @override
   _LoadingScreenState createState() => _LoadingScreenState();
 }
@@ -518,7 +520,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<WeatherData> fetchcurrentweather(position) async {
     var apiKey = 'fad8109ce3ec4083978154521212708';
     var formatedlocation =
-        position.latitude.toString() + ',' + position.longitude.toString();
+        '${position.latitude},${position.longitude}';
     var getweatherURL =
         'http://api.weatherapi.com/v1/current.json?key=$apiKey&q=$formatedlocation&aqi=yes';
     var url = Uri.parse(getweatherURL);
@@ -588,7 +590,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: CircularProgressIndicator(),
       ),
